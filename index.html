@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -28,8 +26,21 @@
     let x = canvas.width / 2
     let y = canvas.height - 30
     //velocidad pelota
-    let dx = 2
-    let dy = -2
+    let dx = -3
+    let dy = -3
+
+    //Variables de la pleta - paddle
+    const paddleHeight = 10;
+    const paddleWidth = 50;
+
+    let paddleX = (canvas.width - paddleWidth) / 2
+    let paddleY = canvas.height - paddleHeight - 10
+
+    let rightPressed = false
+    let leftPressed = false
+
+    const Paddle_sensitivity = 7
+
 
     function drawBall() {
         //comienza un camino
@@ -41,27 +52,48 @@
     }
 
 
-    function drawPaddle() { }
+    function drawPaddle() {
+        ctx.fillStyle = '#fff'
+        ctx.fillRect(
+            paddleX, //x, coordenadas
+            paddleY, // y
+            paddleWidth, //width, lo que va a dibujar
+            paddleHeight // height
+        )
+    }
     function drawBricks() { }
 
-    function collisionDetection() {}
+    function collisionDetection() { }
     function ballMovement() {
         //rebotar las pelotas laterales
 
-        if(
-        x + dx > canvas.width - ballRadius || //rebotar en la pared derecha
-        x + dx < ballRadius //rebotar en la pared izquierda
+        if (
+            x + dx > canvas.width - ballRadius || //rebotar en la pared derecha
+            x + dx < ballRadius //rebotar en la pared izquierda
         ) {
             dx = -dx
         }
 
-        if(
-        y + dy < ballRadius //rebotar en la pared de arriba
+        if (
+            y + dy < ballRadius //rebotar en la pared de arriba
         ) {
             dy = -dy
         }
 
-        if (y + dy > canvas.height - ballRadius) {
+        // la pelota toca el suelo
+
+        const isBallSameAsPaddle =
+        x > paddleX && //revisa la posicion del paddleX "-----" (su pocicion inicial)
+        x < paddleX + paddleWidth // revisa todo el entorno que ocupa el paddleX "-----" la pocision final
+        
+        const isBallTouchingPaddle =
+        y + dy > paddleY
+
+        if (isBallTouchingPaddle && isBallSameAsPaddle) {
+            dy = -dy;
+        }
+
+        else if (y + dy > canvas.height - ballRadius) { //la pelota toca el suelo
             console.log('Game Over');
             document.location.reload()
         }
@@ -69,10 +101,43 @@
         x += dx
         y += dy
     }
-    function paddleMovement() { }
+    function paddleMovement() {
+        if (rightPressed === true && paddleX < canvas.width - paddleWidth) {
+            paddleX += Paddle_sensitivity
+        } else if (leftPressed === true && paddleX > 0) {
+            paddleX -= Paddle_sensitivity
+        }
+    }
 
-    function cleanCanvas () {
-        ctx.clearRect (0, 0, canvas.width, canvas.height)
+    function cleanCanvas() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height)
+    }
+
+    function initEvents() {
+        document.addEventListener('keydown', KeyDownHandler);
+        document.addEventListener('keyup', KeyUpHandler);
+
+        function KeyDownHandler(event) {
+            const { key } = event
+            if (key === 'Left' || key === 'ArrowLeft') {
+                leftPressed = true
+            }
+
+            if (key === 'Right' || key === 'ArrowRight') {
+                rightPressed = true
+            }
+        }
+
+        function KeyUpHandler(event) {
+            const { key } = event
+            if (key === 'Left' || key === 'ArrowLeft') {
+                leftPressed = false
+            }
+
+            if (key === 'Right' || key === 'ArrowRight') {
+                rightPressed = false
+            }
+        }
     }
 
     // infitine loop for game - good for all games
@@ -91,7 +156,7 @@
     }
 
     draw()
-
+    initEvents()
 </script>
 
 </html>
