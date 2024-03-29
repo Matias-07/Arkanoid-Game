@@ -11,9 +11,15 @@
 <canvas>
 </canvas>
 
+<img hidden id='sprite' src="/public/img/sprite.png" alt="sprite Arckanoid">
+<img hidden id='bricks' src="/public/img/bricks.png" alt="sprite bricks Arckanoid">
+
 <script>
     const canvas = document.querySelector('canvas');
     const ctx = canvas.getContext('2d');
+
+    const $sprite = document.querySelector('#sprite')
+    const $bricks = document.querySelector('#bricks')
 
     canvas.width = 448
     canvas.height = 400
@@ -32,6 +38,41 @@
     //Variables de la pleta - paddle
     const paddleHeight = 10;
     const paddleWidth = 50;
+
+    //Variables bloques 
+
+    const brickRowsCount = 6;
+    const brickColumnCount = 13;
+    const brickWidth = 30;
+    const brickHeight = 14;
+    const brickPadding = 2;
+    const brickOffSetTop = 80;
+    const brickOffSetLeft = 16;
+    const bricks = [];
+
+    const BRICK_STATUS = {
+        ACTIVE: 1,
+        DESTROYED: 0
+    }
+
+    for (let c = 0; c < brickColumnCount; c++) {
+        bricks[c] = [] //inicializamos con un array vacio
+        for (let r = 0; r < brickRowsCount; r++) {
+            //calculamos la pocision del ladrillo en la pantalla
+            const brickX = c * (brickWidth + brickPadding) + brickOffSetLeft
+            const brickY = r * (brickHeight + brickPadding) + brickOffSetTop
+            //asignacion randome de los colores de los ladrillos
+            const randome = Math.floor(Math.random() * 8) // IMPORTANTE RECORDAR
+            // fuardamos la informacion de cada ladirllo
+            bricks[c][r] = {
+                x: brickX,
+                y: brickY,
+                status: BRICK_STATUS.ACTIVE,
+                color: randome
+            }
+        }
+
+    }
 
     let paddleX = (canvas.width - paddleWidth) / 2
     let paddleY = canvas.height - paddleHeight - 10
@@ -53,15 +94,41 @@
 
 
     function drawPaddle() {
-        ctx.fillStyle = '#fff'
-        ctx.fillRect(
-            paddleX, //x, coordenadas
-            paddleY, // y
-            paddleWidth, //width, lo que va a dibujar
-            paddleHeight // height
+        ctx.drawImage(
+            $sprite, //la imagen
+            29, //clipX, coordenadas de recorte
+            174, //clipY, coordenadas de recorte
+            paddleWidth, //tamaño del recorete
+            paddleHeight,//tamaño del recorete
+            paddleX, //pocisionX
+            paddleY,//pocisionY
+            paddleWidth,//ancho y alto del dibujo
+            paddleHeight
         )
     }
-    function drawBricks() { }
+    function drawBricks() {
+        for (let c = 0; c < brickColumnCount; c++) {
+            for (let r = 0; r < brickRowsCount; r++) {
+                const currenBrick = bricks[c][r]
+                if (currenBrick.status === BRICK_STATUS.DESTROYED)
+                    continue;
+
+                const clipX = currenBrick.color * 32
+
+                ctx.drawImage(
+                    $bricks,
+                    clipX,
+                    0,
+                    31,
+                    14,
+                    currenBrick.x,
+                    currenBrick.y,
+                    brickWidth,
+                    brickHeight
+                )
+            }
+        }
+    }
 
     function collisionDetection() { }
     function ballMovement() {
@@ -83,11 +150,11 @@
         // la pelota toca el suelo
 
         const isBallSameAsPaddle =
-        x > paddleX && //revisa la posicion del paddleX "-----" (su pocicion inicial)
-        x < paddleX + paddleWidth // revisa todo el entorno que ocupa el paddleX "-----" la pocision final
-        
+            x > paddleX && //revisa la posicion del paddleX "-----" (su pocicion inicial)
+            x < paddleX + paddleWidth // revisa todo el entorno que ocupa el paddleX "-----" la pocision final
+
         const isBallTouchingPaddle =
-        y + dy > paddleY
+            y + dy >= paddleY
 
         if (isBallTouchingPaddle && isBallSameAsPaddle) {
             dy = -dy;
@@ -102,9 +169,9 @@
         y += dy
     }
     function paddleMovement() {
-        if (rightPressed === true && paddleX < canvas.width - paddleWidth) {
+        if (rightPressed && paddleX < canvas.width - paddleWidth) {
             paddleX += Paddle_sensitivity
-        } else if (leftPressed === true && paddleX > 0) {
+        } else if (leftPressed && paddleX > 0) {
             paddleX -= Paddle_sensitivity
         }
     }
