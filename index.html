@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="/public/css/styles.css">
     <title>Arckanoid Game in Js</title>
 </head>
-
+<section>Start Game</section>
 <canvas>
 </canvas>
 
@@ -185,7 +185,12 @@
 
         else if (y + dy > canvas.height - ballRadius) { //la pelota toca el suelo
             console.log('Game Over');
-            if (UpPressed){
+            
+            const audio = new Audio('/public/audio/GameOver.mp3')
+            audio.volume = 0.5;
+            audio.play();
+
+            if (UpPressed) {
                 document.location.reload()
             }
         }
@@ -260,8 +265,18 @@
         window.requestAnimationFrame(draw)
     }
 
-    draw()
-    initEvents()
+    const $sectoin = document.querySelector('section')
+
+    $sectoin.addEventListener('click', () => {
+        draw()
+        initEvents()
+
+        const audio = new Audio('/public/audio/RoundStart.mp3')
+        audio.volume = 0.5
+        audio.play()
+
+        $sectoin.remove()
+    })
 </script>
 
 </html>

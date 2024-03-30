@@ -9,3 +9,16 @@ canvas {
     margin: 0 auto;
     display: block;
 }
+
+section {
+    position: absolute;
+    background-color: #111;
+    width: 100vw;
+    height:100vw;
+    top: 0;
+    inset: 0;
+    display: grid;
+    font-size: 48px;
+    place-content: center;
+    color: #fff;
+}
