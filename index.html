@@ -10,6 +10,7 @@
 <section>Start Game</section>
 <canvas>
 </canvas>
+<div>Score Board: <span></span></div>
 
 <img hidden id='sprite' src="/public/img/sprite.png" alt="sprite Arckanoid">
 <img hidden id='bricks' src="/public/img/bricks.png" alt="sprite bricks Arckanoid">
@@ -20,6 +21,10 @@
 
     const $sprite = document.querySelector('#sprite')
     const $bricks = document.querySelector('#bricks')
+
+    let scoreBoard = 0
+    
+
 
     canvas.width = 448
     canvas.height = 400
@@ -149,7 +154,9 @@
 
                 if (isBallSameXAsBrick && isBallSameYAsBrick) {
                     dy = -dy
-                    currenBrick.status = BRICK_STATUS.DESTROYED
+                    currenBrick.status = BRICK_STATUS.DESTROYED 
+                    scoreBoard++
+                    document.querySelector('span').innerText = scoreBoard
                 }
             }
         }
@@ -185,10 +192,12 @@
 
         else if (y + dy > canvas.height - ballRadius) { //la pelota toca el suelo
             console.log('Game Over');
-            
-            const audio = new Audio('/public/audio/GameOver.mp3')
-            audio.volume = 0.5;
-            audio.play();
+
+
+          /*  const audiOver = new Audio('/public/audio/GameOver.mp3')
+            audiOver.volume = 0.5;
+            audiOver.play();
+            audiOver.*/
 
             if (UpPressed) {
                 document.location.reload()
@@ -262,7 +271,9 @@
         ballMovement();
         paddleMovement();
 
+
         window.requestAnimationFrame(draw)
+        
     }
 
     const $sectoin = document.querySelector('section')
