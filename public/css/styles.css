@@ -13,18 +13,55 @@ canvas {
 section {
     position: absolute;
     background-color: #111;
-    width: 100vw;
-    height: 100vw;
+    width: 100%;
+    height: 100%;
     top: 0;
     inset: 0;
     display: grid;
     font-size: 48px;
     place-content: center;
     color: #fff;
+    cursor: pointer;
 }
 
 div {
+    display: none;
     color: #fff;
-    font-size: 20px;
-    margin-top: 15px;
+    font-size: 16px;
+    font-family: 'Press Start 2P', cursive;   /* Fuente estilo videojuego */
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    padding: 5px 10px;
+    background-color: #000;
+    border: 2px solid #fff;
+    border-radius: 5px;
+    text-align: center;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);   /* Sombra */
+    z-index: 1; /* Asegura que esté delante del canvas */
+}
+
+
+
+button {
+    position: absolute;
+    width: 25%;
+    padding: 20px;
+    margin: auto;
+    left: 0;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    place-content: center;
+    border: none;
+    color: #fff;
+    background-color: #007bff;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
 }

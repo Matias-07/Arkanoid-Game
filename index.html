@@ -8,9 +8,14 @@
     <title>Arckanoid Game in Js</title>
 </head>
 <section>Start Game</section>
-<canvas>
-</canvas>
-<div>Score Board: <span></span></div>
+
+<body>
+    <canvas>
+    </canvas>
+    <div id="scoreBoard">Score Board: <span></span></div>
+    <button id="resetButton" style="display: none;">Reiniciar Juego</button>
+</body>
+
 
 <img hidden id='sprite' src="/public/img/sprite.png" alt="sprite Arckanoid">
 <img hidden id='bricks' src="/public/img/bricks.png" alt="sprite bricks Arckanoid">
@@ -23,7 +28,7 @@
     const $bricks = document.querySelector('#bricks')
 
     let scoreBoard = 0
-    
+    let ifWin = true
 
 
     canvas.width = 448
@@ -46,8 +51,8 @@
 
     //Variables bloques 
 
-    const brickRowsCount = 6;
-    const brickColumnCount = 13;
+    const brickRowsCount = 1//6;
+    const brickColumnCount = 1 //13;
     const brickWidth = 32;
     const brickHeight = 16;
     const brickPadding = 0;
@@ -154,13 +159,30 @@
 
                 if (isBallSameXAsBrick && isBallSameYAsBrick) {
                     dy = -dy
-                    currenBrick.status = BRICK_STATUS.DESTROYED 
+                    currenBrick.status = BRICK_STATUS.DESTROYED
                     scoreBoard++
-                    document.querySelector('span').innerText = scoreBoard
                 }
             }
         }
+
+        if (scoreBoard === brickColumnCount * brickRowsCount && ifWin) {
+            console.log("¡Ganaste!");
+            window.alert("¡Ganaste!");
+            ifWin = false
+            document.getElementById('resetButton').style.display = 'block';
+            x = -2
+            y = -2
+            dx = -2
+            dy = -2
+        }
+
     }
+
+    document.getElementById('resetButton').addEventListener('click', function () {
+        location.reload()
+    })
+
+
     function ballMovement() {
         //rebotar las pelotas laterales
 
@@ -194,14 +216,14 @@
             console.log('Game Over');
 
 
-          /*  const audiOver = new Audio('/public/audio/GameOver.mp3')
-            audiOver.volume = 0.5;
-            audiOver.play();
-            audiOver.*/
+            /*  const audiOver = new Audio('/public/audio/GameOver.mp3')
+              audiOver.volume = 0.5;
+              audiOver.play();
+              audiOver.*/
 
-            if (UpPressed) {
-                document.location.reload()
-            }
+
+            document.location.reload()
+
         }
 
 
@@ -271,9 +293,9 @@
         ballMovement();
         paddleMovement();
 
-
+        document.querySelector('span').innerText = scoreBoard
         window.requestAnimationFrame(draw)
-        
+
     }
 
     const $sectoin = document.querySelector('section')
@@ -287,6 +309,8 @@
         audio.play()
 
         $sectoin.remove()
+
+        document.getElementById('scoreBoard').style.display = 'block'
     })
 </script>
 
